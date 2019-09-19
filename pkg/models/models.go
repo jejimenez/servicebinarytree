@@ -1,12 +1,12 @@
 package models
 
 type Node struct {
-    Value int
-	Left  *Node `json:"node"`
-    Right *Node `json:"node"`
+    Value int  `json:"value"`
+    Left  *Node `json:"left"`
+    Right *Node `json:"right"`
 }
 
 type BinaryTree struct {
-	Name string `json:"string"`
-	Root Node `json:"node"`
+    Name string `json:"name"`
+    Root *Node `json:"root"`
 }
