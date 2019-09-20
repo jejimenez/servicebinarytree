@@ -58,3 +58,16 @@ func (r *binarytreeRepository) GetAllBinarytrees() ([]*models.BinaryTree, error)
     return bts, nil
 }
 
+// Get binary tree by name
+func (r *binarytreeRepository) GetBinarytreeByName(n string) (*models.BinaryTree, error) {
+    r.mtx.Lock()
+    defer r.mtx.Unlock()
+
+    for _, v := range r.binarytrees {
+        if v.Name == n {
+            return v, nil
+        }
+    }
+    return nil, fmt.Errorf("The Binarytree %s doesn't exist", n)
+}
+

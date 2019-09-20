@@ -3,12 +3,12 @@ package rest
 import (    
     "testing"
     "net/http"
-    "strconv"
+    //"strconv"
     "io/ioutil"
     "servicebinarytree/pkg/models"
     sampledata "servicebinarytree/pkg/models/sample-data"
     "servicebinarytree/pkg/storage/inmemory"
-    //"fmt"
+    "fmt"
 
     "encoding/json"
     "net/http/httptest"
@@ -34,6 +34,7 @@ func TestHandler_CreateTree(t *testing.T) {
     }{
         {name: "binarytree created", bt: binarytreeSample(), status: http.StatusCreated},
         {name: "binarytree already exists", bt: sampledata.Binarytrees["two"], status: http.StatusPreconditionFailed},
+        {name: "binarytree already exists", bt: nil, status: http.StatusInternalServerError},
     }
 
     for _, tc := range testData {
@@ -46,6 +47,7 @@ func TestHandler_CreateTree(t *testing.T) {
             }
 
             jsonStr := []byte(j)
+            //fmt.Println(bytes.NewBuffer(jsonStr))
             rq, err := http.NewRequest("POST", "/tree", bytes.NewBuffer(jsonStr))
             if err != nil {
                 t.Fatalf("could not created request: %v", err)
@@ -76,29 +78,37 @@ func TestHandler_GetLowestCommonAncestor(t *testing.T){
     testData := []struct {
         name    string
         treename      string
-        val1    int
-        val2    int
+        val1    string
+        val2    string
         ancestor int
         status  int
         err     string
     }{
-        {name: "lowest ancestor found", treename: "four", val1: 29, val2:44, ancestor:39, status: http.StatusAccepted},
-        {name: "node not found", treename: "four", val1: 100, val2:44, status: http.StatusNotFound},
+        {name: "lowest ancestor found", treename: "four", val1: "29", val2:"44", ancestor:39, status: http.StatusFound},
+        {name: "node not found", treename: "four", val1: "100", val2:"44", status: http.StatusNotFound, err:"StatusNotFound"},
+        {name: "value 1 equals to value 2", treename: "four", val1: "12", val2:"12", status: http.StatusUnprocessableEntity, err:"StatusUnprocessableEntity"},
     }
 
     for _, tc := range testData {
         t.Run(tc.name, func(t *testing.T) {
             // Assetions 
-
+            /*
             rq, err := http.NewRequest("GET", "/lowestancestor", nil)
             if err != nil {
                 t.Fatalf("could not created request: %v", err)
             }
             q := rq.URL.Query()
             q.Add("treename", tc.treename)
-            q.Add("value1", strconv.Itoa(tc.val1))
-            q.Add("value2", strconv.Itoa(tc.val2))
+            q.Add("value1", tc.val1)
+            q.Add("value2", tc.val2)
             rq.URL.RawQuery = q.Encode()
+            */
+
+            uri := fmt.Sprintf("/lowestancestor/%s/%s/%s", tc.treename, tc.val1, tc.val2)
+            rq, err := http.NewRequest("GET", uri, nil)
+            if err != nil {
+                t.Fatalf("could not created request: %v", err)
+            }
 
             //fmt.Println("____")//rq.URL.String())
 
@@ -119,7 +129,7 @@ func TestHandler_GetLowestCommonAncestor(t *testing.T){
             if err != nil {
                 t.Fatalf("could not read response: %v", err)
             }
-            // if is not the expected ancestor
+            // if is the expected ancestor
             if tc.err == "" {
                 var lar *models.LowestAncestorResp
                 err = json.Unmarshal(b, &lar)

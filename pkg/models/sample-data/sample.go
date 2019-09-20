@@ -100,3 +100,26 @@ var Binarytrees = map[string]*models.BinaryTree{
         },
     },
 }
+var LowestAncResps = map[string]*models.LowestAncestorResp {
+    "lowest ancestor found" : &models.LowestAncestorResp{
+    Treename      : "four",
+    Value1        : 29,
+    Value2        : 44,
+    Ancestor      : 39,
+    },
+    "node not found" : &models.LowestAncestorResp{
+    Treename      : "four",
+    Value1        : 100,
+    Value2        : 44,
+    },
+    "value 1 not in params" : &models.LowestAncestorResp{
+    Treename      : "four",
+    Value2        : 44,
+    },
+    "value 1 equals to value 2" : &models.LowestAncestorResp{
+    Treename      : "four",
+    Value1        : 100,
+    Value2        : 100,
+    },
+}
+

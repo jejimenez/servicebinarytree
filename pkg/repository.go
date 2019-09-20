@@ -9,5 +9,5 @@ type BinarytreeRepository interface {
     CreateBinarytree(g *models.BinaryTree) error
     CheckIfExists(g string) error
     GetAllBinarytrees() ([]*models.BinaryTree, error)
-
+    GetBinarytreeByName(n string) (*models.BinaryTree, error)
 }
