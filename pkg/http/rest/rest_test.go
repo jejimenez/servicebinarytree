@@ -4,6 +4,7 @@ import (
     "testing"
     "net/http"
     "strconv"
+    "io/ioutil"
     "servicebinarytree/pkg/models"
     sampledata "servicebinarytree/pkg/models/sample-data"
     "servicebinarytree/pkg/storage/inmemory"
@@ -32,7 +33,7 @@ func TestHandler_CreateTree(t *testing.T) {
         err    string
     }{
         {name: "binarytree created", bt: binarytreeSample(), status: http.StatusCreated},
-        {name: "binarytree already exists", bt: sampledata.Binarytrees["two"], status: http.StatusPreconditionFailed, err: "Binarytree already exists"},
+        {name: "binarytree already exists", bt: sampledata.Binarytrees["two"], status: http.StatusPreconditionFailed},
     }
 
     for _, tc := range testData {
@@ -77,10 +78,12 @@ func TestHandler_GetLowestCommonAncestor(t *testing.T){
         treename      string
         val1    int
         val2    int
+        ancestor int
         status  int
         err     string
     }{
-        {name: "lowest ancestor found", treename: "four", val1: 29, val2:44, status: http.StatusAccepted},
+        {name: "lowest ancestor found", treename: "four", val1: 29, val2:44, ancestor:39, status: http.StatusAccepted},
+        {name: "node not found", treename: "four", val1: 100, val2:44, status: http.StatusNotFound},
     }
 
     for _, tc := range testData {
@@ -97,7 +100,7 @@ func TestHandler_GetLowestCommonAncestor(t *testing.T){
             q.Add("value2", strconv.Itoa(tc.val2))
             rq.URL.RawQuery = q.Encode()
 
-            //fmt.Println(rq.URL.String())
+            //fmt.Println("____")//rq.URL.String())
 
             repo := inmemory.InitBinarytreeRepository(sampledata.Binarytrees)
             s := New(repo)
@@ -110,6 +113,23 @@ func TestHandler_GetLowestCommonAncestor(t *testing.T){
             // if the status is not the expected
             if tc.status != res.StatusCode {
                 t.Errorf("expected %d, got: %d", tc.status, res.StatusCode)
+            }
+
+            b, err := ioutil.ReadAll(res.Body)
+            if err != nil {
+                t.Fatalf("could not read response: %v", err)
+            }
+            // if is not the expected ancestor
+            if tc.err == "" {
+                var lar *models.LowestAncestorResp
+                err = json.Unmarshal(b, &lar)
+                if err != nil {
+                    t.Fatalf("could not unmarshall response %v", err)
+                }
+
+                if lar.Ancestor != tc.ancestor {
+                    t.Fatalf("expected %v, got: %v", tc.ancestor, lar.Ancestor)
+                }
             }
 
         })

@@ -1,7 +1,6 @@
 package sampledata
 
 import (
-    //gopher "gopherapi/pkg"
     "servicebinarytree/pkg/models"
 )
 
@@ -68,7 +67,7 @@ var Binarytrees = map[string]*models.BinaryTree{
         },
     },
     "four": &models.BinaryTree{
-            Name:"samplebinarytree",
+            Name:"four",
             Root: &models.Node{
                 Value: 67,
                 Left: &models.Node{
