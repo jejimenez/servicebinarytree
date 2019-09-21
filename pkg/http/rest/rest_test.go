@@ -85,6 +85,7 @@ func TestHandler_GetLowestCommonAncestor(t *testing.T){
         err     string
     }{
         {name: "lowest ancestor found", treename: "four", val1: "29", val2:"44", ancestor:39, status: http.StatusFound},
+        {name: "tree not found", treename: "zero", val1: "100", val2:"44", status: http.StatusNotFound, err:"StatusNotFound"},
         {name: "node not found", treename: "four", val1: "100", val2:"44", status: http.StatusNotFound, err:"StatusNotFound"},
         {name: "value 1 equals to value 2", treename: "four", val1: "12", val2:"12", status: http.StatusUnprocessableEntity, err:"StatusUnprocessableEntity"},
     }
@@ -144,6 +145,7 @@ func TestHandler_GetLowestCommonAncestor(t *testing.T){
 
         })
     }
+
 }
 
 // Test data
@@ -155,7 +157,7 @@ func binarytreeSample() *models.BinaryTree {
             Left: &models.Node{
                 Value: 10,
                 Right: &models.Node{
-                    Value: 9,
+                    Value: 15,
                 },
             },
             Right: &models.Node{

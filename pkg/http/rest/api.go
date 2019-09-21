@@ -126,7 +126,15 @@ func (a *api) LowestAncestor(w http.ResponseWriter, r *http.Request){
     v1,_:= strconv.Atoi(params["value1"])
     v2,_:= strconv.Atoi(params["value2"])
 
-    bt,_  := a.repositorybt.GetBinarytreeByName(nm)
+    bt,err := a.repositorybt.GetBinarytreeByName(nm)
+
+    if err != nil {
+        w.WriteHeader(http.StatusNotFound)         
+        json.NewEncoder(w).Encode(fmt.Sprintf("Not found. %s", err))
+        return
+    }
+
+
     ca, err := btservice.GetLowestCommonAncestor(bt, v1, v2)
 
     if err != nil {
@@ -147,13 +155,5 @@ func (a *api) LowestAncestor(w http.ResponseWriter, r *http.Request){
     w.WriteHeader(http.StatusFound)
     json.NewEncoder(w).Encode(lar)
 
-
-    //fmt.Println(val)
-    //if params.treenam 
-
-    //fmt.Println(params)
-    //fmt.Println(params.treen)
-
-    //StatusUnprocessableEntity
 }
 
