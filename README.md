@@ -75,3 +75,22 @@ Devuelve :
 }
 
 ```
+##Ejecutar el Servidor
+Para desplegar y ejecutar el servidor se puede a través de Docker:
+
+    git clone https://github.com/jejimenez/servicebinarytree.git
+    cd servicebinarytree/
+    make docker
+    make run
+
+Si se tiene instalado go se puede desplegar con los siguientes comandos
+
+    git clone https://github.com/jejimenez/servicebinarytree.git
+    cd servicebinarytree/
+    go build cmd/binarytree/main.go 
+    ./main
+
+Las pruebas se pueden ejecutar de la siguiente manera después de haber clonado el repositorio y en la carpeta servicebinarytree
+
+    make test
+    make unittest
