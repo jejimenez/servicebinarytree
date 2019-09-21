@@ -61,7 +61,7 @@ Este end point recibe la información POST del arbol que se va a crear. Se debe 
 ```
 ### /lowestancestor
 #### /lowestancestor/{treename:[a-zA-Z0-9_]+}/{value1:[0-9_]+}/{value2:[0-9_]+}
-Éste endpoint recibe el nombre del arbol, el valor 1 y el valor 2 y devuelve el valor del ancestro común más cercano. Ej:
+Éste endpoint recibe el nombre del arbol, usando el método GET, el valor 1 y el valor 2 y devuelve el valor del ancestro común más cercano. Ej:
 
 http://localhost:8080/lowestancestor/treename/29/44
 
