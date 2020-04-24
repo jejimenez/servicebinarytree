@@ -1,5 +1,5 @@
-# Prueba Técnica Masivian
-## Prueba Técnica Desarrollador Backend
+# EJERCICIO
+## Ejercicio Desarrollador Backend
 
 API REST que permite crear un arbol binario y buscar el ancestro común de dos nodos.
 La solución se desarrolló en Go pensada como un microservicio que responde a requerimientos de alta concurrencia.
